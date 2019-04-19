@@ -16,7 +16,7 @@ such as `accounts/login/, accounts/register/, accounts/reset_password, accounts/
 	Download the file to your `path/to` and then execute the following command 
   in your django-projects virtual environment or other.
   
-	pip3 install --user path/to/django-accounts/dist/django-accounts-0.1.tar.gz
+	pip3 install --user path/to/django-accounts-0.1.tar.gz
 ```
 
 2. Add "accounts" to your INSTALLED_APPS setting like this:
