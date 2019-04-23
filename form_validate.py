@@ -17,7 +17,6 @@
 注：提供的默认匹配模式并非严格讲究，只是简单参考！
 ```
 """
-
 # html表单模板
 form_template = """
 <div class="form-group">
@@ -120,6 +119,7 @@ function checkInsert(selector, {re_pattern=null, min_limit=1, max_limit=200, tip
                 error_status = true;
                 selector.parent().next().html(tip_error).show();
             }else{
+                error_status = false;
                 selector.parent().next().html('').show();
             }
         }else{
@@ -152,6 +152,8 @@ def patterns(
         re_wx='/^[a-zA-Z]([-_a-zA-Z0-9]{5,19})+$/',
         re_car='/^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1}$/',
         re_number='/^-?//d+$/',
+        re_active_code = '/^[1]\d{5}$/',
+        re_phone='/^1[0-9]{10}$/',
         ):
     return {
         #  0(id/for/name) 1(label) 2(type) 3(placeholder) 4(minlength) 5(maxlength) 6(re_pattern) 7(tip_error)
@@ -160,13 +162,17 @@ def patterns(
         'name': ['name', '收件人', 'text', '请输入真实姓名或者别名', 1, 50, re_name, '提示：收件人格式有误，请检查并重新输入！'],
         'url': ['url', 'URL地址', 'url', 'url', 1, 200, re_url, '提示：url地址格式有误，请检查并重新输入！'],
         'password': ['password', '密 码', 'password', 'PassWord', 6, 16, re_password, '提示：密码格式有误，请检查并重新输入！'],
+        'origin_password': ['origin_password', '密 码', 'origin_password', 'Origin Password', 6, 16, re_password, '提示：密码格式有误，请检查并重新输入！'],
+        'new_password': ['new_password', '密 码', 'new_password', 'New Password', 6, 16, re_password, '提示：密码格式有误，请检查并重新输入！'],
         'ipv4': ['ipv4', 'IPv4地址', 'text', '请输入Ipv4', 10, 20, re_ipv4, '提示：ipv4格式有误，请检查并重新输入！'],
         'color16': ['color16', '请输入十六进制rgb', 'text', '十六进制颜色', 5, 30, re_color16, '提示：16进制rgb格式有误，请检查并重新输入！'],
         'ic': ['ic', '身份证', 'text', '请输入18位身份证号码', 18, 18, re_ic, '提示：身份证格式有误，请检查并重新输入！'],
         'qq': ['qq', 'QQ号', 'text', '请输入QQ号码', 5, 11, re_qq, '提示：QQ号码格式有误，请检查并重新输入！'],
         'wx': ['wx', '微信号', 'text', '请输入微信号', 5, 50, re_wx, '提示：微信号格式有误，请检查并重新输入！'],
         'car': ['car', '车牌号', 'text', '请输入车牌号', 4, 10, re_car, '提示：车牌号格式有误，请检查并重新输入！'],
-        'number': ['number', '数值', 'number', '请输入数值', 1, 20, re_number, '提示：输入的数值格式，请检查并重新输入！']
+        'number': ['number', '数值', 'number', '请输入数值', 1, 20, re_number, '提示：输入的数值格式，请检查并重新输入！'],   # 数值的min, max需要调整
+        'active_code': ['active_code', '激活码', 'text', '请输入邮箱激活码', 6, 6, re_active_code, '提示：输入的邮箱激活码格式有误，请重新输入！'],
+        'phone': ['phone', '联系方式', 'text', '请输入手机号码', 11, 11, re_phone, '提示：输入的手机号码格式有误，请检查并重新输入！'],
     }
 
 
@@ -198,7 +204,7 @@ def generate_js(fields, patterns, js_file):
         f.write(js)
 
 
-def generate(fields: '[mail,username, name, url, password, ipv4, color16, ic, qq, wx, car, number]', patterns, html_file, js_file):
+def generate(fields: '[mail,username, name, url, password, ipv4, color16, ic, qq, wx, car, number, active_code, phone]', patterns, html_file, js_file):
     generate_html(fields, patterns, html_file, js_file)
     generate_js(fields, patterns, js_file)
 
@@ -208,5 +214,5 @@ if __name__ == '__main__':
     # 定义匹配模式， 如果为空则使用默认匹配模式
     re_patterns = patterns()
     # 指定类型
-    fields_list = ['username', 'name', 'url']
-    generate(fields_list, re_patterns, 'try.html', 'try.js')
+    fields_list = ['username', 'password', 'active_code']
+    generate(fields_list, re_patterns, 'register.html', 'reset_password.js')
